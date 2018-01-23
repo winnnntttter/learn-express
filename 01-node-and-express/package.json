@@ -1,0 +1,15 @@
+{
+  "name": "01-node-and-express",
+  "version": "1.0.0",
+  "description": "### express版",
+  "main": "express-hello-world.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
