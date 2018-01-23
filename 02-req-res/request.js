@@ -21,6 +21,8 @@ app.get('/staff/:city/:name',(req,res,next)=>{
 
   console.log(req.query);//http://localhost:3000/staff/beijing/li?aa=1&bb=2时为{ aa: '1', bb: '2' }
 
+  //console.log(req.route);
+
   let like = staff[req.params.city][req.params.name].like;
   if(!like){
     console.log("ooh,not found");
@@ -38,7 +40,7 @@ app.post('/staff', (req, res,next) => {
     }
   }
   console.log(staff);
-  res.send(staff);
+  res.json(staff);
 });
 
 app.use((req,res,next)=>{
