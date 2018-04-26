@@ -3,6 +3,11 @@ const app = express();
 
 app.set('port',process.env.PORT || 3000);
 
+//设置环境变量的PORT：linux只设置一次有效 $ PORT=1234 node a.js
+//永久有效  $ export PORT=1234
+//windows下只能设置永久有效 set PORT=1234(cmd有效，powershell无效，不相通)
+
+
 //主页
 app.get("/",(req,res)=>{
   res.type('text/plain');
@@ -21,7 +26,7 @@ app.use((req,res,next)=>{
   res.send('404 - Not Found');
 });
 
-//定制500页面
+//定制500页面 程序运行错误
 app.use((err,req,res,next)=>{
   console.error(err);
   res.type('text/plain');
