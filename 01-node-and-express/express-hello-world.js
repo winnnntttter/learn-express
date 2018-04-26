@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-app.get('/',(req,res)=>{
+app.get(['/','/index'],(req,res)=>{
   //res.type('text/plain');
   res.send('Hello World');//或者{'msg':'hello world'},此时默认响应头的Content-Type为application/json;
 });
