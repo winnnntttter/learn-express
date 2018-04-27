@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));//不添加则表单提交的数据无效
+app.use(bodyParser.urlencoded({ extended: true}));//不添加则表单提交的数据无效 extended 为false时不能正确的解析复杂对象（多级嵌套）
 
 const staff = {
   beijing:{

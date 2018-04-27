@@ -2,7 +2,31 @@
 
 - 一般get没有请求体，post的请求体最常见的媒体类型是application/x-www-form-urlencoded(&分隔和查询字符串一样的格式)
 
-- 支持文件上传的话，媒体类型为multipart/form-data,ajax请求为application/json。
+- 支持文件上传的话，媒体类型为multipart/form-data，发送json请求为application/json，xml请求为text/xml（一共四种）
+
+- jquery默认的 content-Type 配置的是 application/x-www-form-urlencoded，因此更改ajax请求参数：contentType: "application/json"可发送json数据
+
+```
+$.ajax({
+    url: "/save",
+    type: "post",
+    contentType: "application/json",
+    data: JSON.stringify({
+        name: "henry",
+        age: 30,
+        hobby: [ "sport", "coding" ]
+    })
+});
+```
+
+- bodyParser.json是用来解析json数据格式的。bodyParser.urlencoded则是用来解析我们通常的form表单提交的数据，也就是请求头中包含这样的信息： Content-Type: application/x-www-form-urlencoded
+
+    - extended选项允许配置使用querystring(false)或qs(true)来解析数据，默认值是true（不推荐），querystring并不能正确的解析复杂对象（多级嵌套），而qs却可以做到，qs只会解析5层嵌套，超出的部分会表现的跟本文头部的那种情况一样；对于数组，qs最大只会解析20个索引，超出的部分将会以键值对的形式解析。 
+
+```
+querystring.parse("name=henry&age=30") => { name: 'henry', age: '30' }
+```
+
 ### req对象
 - req.params：命名过的路由参数
 
@@ -81,3 +105,14 @@ router.post(“/staff”,function(req,res){
 - res.links(links)：设置链接响应报头。这是一个专用的报头，在大多数应用程序中几乎没有用处。
 
 - res.locals,res.render(view,[locals],callback)：res.locals 是一个对象，包含用于渲染视图的默认上下文。res.render 使用配置的模板引擎渲染视图（不能把 res.render 的 locals 参数与 res.locals 混为一谈，上下文在 res.locals 中会被重写，但在没有被重写的情况下仍然可用）。res.render 的默认响应代码为 200，使用 res.status 可以指定一个不同的代码。
+
+- 以下几种会返回响应，终结请求响应的循环
+    - res.download()	提示下载文件。
+    - res.end()	终结响应处理流程。
+    - res.json()	发送一个 JSON 格式的响应。
+    - res.jsonp()	发送一个支持 JSONP 的 JSON 格式的响应。
+    - res.redirect()	重定向请求。
+    - res.render()	渲染视图模板。
+    - res.send()	发送各种类型的响应。
+    - res.sendFile	以八位字节流的形式发送文件。
+    - res.sendStatus()	设置响应状态代码，并将其以字符串形式作为响应体的一部分发送。
