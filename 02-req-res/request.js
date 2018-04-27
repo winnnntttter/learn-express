@@ -21,12 +21,12 @@ const staff2 = [
   {
     city:"beijing",
     name:"li",
-    like:"reading"
+    like:["reading","eating"]
   },
   {
     city:"beijing",
     name:"wang",
-    like:"writing"
+    like:["writing","reading"]
   }
 ];
 
@@ -73,7 +73,7 @@ app.post('/staff', (req, res, next) => {
 
 app.get('/staff2',(req, res, next)=>{
   res.type('text/html');
-  res.send('<form action="/staff2" method="post">城市：<input name="staff[0][city]">姓名：<input name="staff[0][name]">爱好：<input name="staff[0][like]"><br>城市：<input name="staff[1][city]">姓名：<input name="staff[1][name]">爱好：<input name="staff[1][like]"><br><button type="submit">提交</button></form>');
+  res.send('<form action="/staff2" method="post">城市：<input name="staff[0][city]">姓名：<input name="staff[0][name]">爱好：<label>读<input type="checkbox" name="staff[0][like]" value="reading"></label><label>写<input type="checkbox" name="staff[0][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[0][like]" value="eating"></label><br>城市：<input name="staff[1][city]">姓名：<input name="staff[1][name]">爱好：<label>读<input type="checkbox" name="staff[1][like]" value="reading"></label><label>写<input type="checkbox" name="staff[1][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[1][like]" value="eating"></label><br><button type="submit">提交</button></form>');
 });//extended需设置为true
 
 app.post('/staff2', (req, res, next) => {
