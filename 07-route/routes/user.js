@@ -41,5 +41,6 @@ exports.update = function(req, res){
   var user = req.body.user;
   req.user.name = user.name;
   req.user.email = user.email;
-  res.redirect('back');
+  //res.send("asd");
+  res.redirect('back'); //需要结束请求响应，重定向到一个页面，或者返回信息
 };
