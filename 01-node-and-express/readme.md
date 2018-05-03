@@ -50,7 +50,7 @@
   - 运行
 
     ```
-    
+    $ node index.js
     ```
 ## 三、Node.js和Express的简单比较
   - node实现Hello World
