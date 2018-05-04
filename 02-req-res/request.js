@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));//不添加则表单提交的数据无效 extended 为false时不能正确的解析复杂对象（多级嵌套）
 
 const staff = {
@@ -16,7 +16,6 @@ const staff = {
     zhang:{like:'watching'}
   }
 };
-
 const staff2 = [
   {
     city:"beijing",
@@ -30,6 +29,29 @@ const staff2 = [
   }
 ];
 
+app.get('/staff/:city',(req,res)=>{
+  console.log(req.query);
+  if(!staff[req.params.city]){
+    console.log("ooh, city not found");
+    res.send(`ooh, city ${req.params.city} not found`);
+    //return next();
+  }else{
+    if(req.query.name){
+      if(staff[req.params.city][req.query.name]){
+        let like = staff[req.params.city][req.query.name].like;
+        res.send(`${req.query.name} form ${req.params.city} like ${like}`);
+      }else{
+        res.send(`There is no man named ${req.query.name}`);
+      }
+    }else{
+      let str = "";
+      for(let i in staff[req.params.city]){
+        str += i + " like " + staff[req.params.city][i].like +"<br>";
+      }
+      res.send(str);
+    }
+  }
+});
 
 app.get('/staff/:city/:name',(req,res,next)=>{
   console.log(req.params);//{ city: 'beijing', name: 'li' }
@@ -52,16 +74,29 @@ app.get('/staff/:city/:name',(req,res,next)=>{
   }
 });
 
-app.get('/staff',(req, res, next)=>{
-  res.type('text/html');
-  res.send('<form action="/staff" method="post"><input name="beijing"><button type="submit">提交</button></form>');
+app.post('/staff', (req, res,next) => {         //需要添加app.use(bodyParser.json());使用curl提交
+  for(let i in req.body){
+    if(staff[i]){
+      Object.assign(staff[i],req.body[i]);
+    }else{
+      staff[i] = req.body[i];
+    }
+  }
+  console.log(staff);
+  res.json(staff);
 });
 
-app.post('/staff', (req, res, next) => {
+
+app.get('/staff3',(req, res, next)=>{
+  res.type('text/html');
+  res.send('<form action="/staff3" method="post"><input name="beijing"><button type="submit">提交</button></form>');
+});
+
+app.post('/staff3', (req, res, next) => {          //使用表单提交，不需要添加app.use(bodyParser.json());，需添加app.use(bodyParser.urlencoded({ extended: false}))
   console.log(req.body);
 
   for(let i in req.body){
-    const jsonTemp = JSON.parse(req.body[i]);//传json格式value
+    const jsonTemp = JSON.parse(req.body[i]);//传json格式value：{"zhao":{"like":"listening"}}
     if(staff[i]){
       Object.assign(staff[i],jsonTemp);
     }else{
@@ -70,6 +105,8 @@ app.post('/staff', (req, res, next) => {
   }
   res.json(staff);
 });
+
+
 
 app.get('/staff2',(req, res, next)=>{
   res.type('text/html');
