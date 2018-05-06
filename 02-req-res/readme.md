@@ -66,7 +66,7 @@ $.ajax({
 - req.body:POST请求体，需要使用body-parser中间件处理req.body：npm i body-parser --save。POST的请求参数不像查询字符串在url中传递，而是在REQUEST正文中传递。
 
     ```
-    router.post(“/staff”,function(req,res){
+    router.post("/staff",function(req,res){
         let reqBody = req.body; // {"beijing":{"zhao":{"like":"listening"}}}
     })
 
@@ -98,14 +98,45 @@ $.ajax({
 
 - res.status(code)：设置 HTTP 状态代码。Express 默认为 200（成功），所以你可以使用这个方法返回状态404（页面不存在）或 500（服务器内部错误），或任何一个其他的状态码。对于重定向（状态码 301、302、303 和 307），有一个更好的方法：redirect。
 
+    ```
+    app.use((req,res,next)=>{
+        res.status(404); //如果不设置，状态码仍是200或304（缓存）。
+        res.send('404 - Not Found，未设置此页面的路由。');
+    });
+    app.use((err,req,res,next)=>{
+        console.error(err);
+        res.status(500); //如果不设置，状态码仍是200或304（缓存）。
+        res.send('500 - Server Error，这是程序内部错误，请检查代码。');
+    });
+    ```
 - res.set(name,value)：设置响应头。这通常不需要手动设置。
 
 - res.send(body),res.send(status,body)：向客户端发送响应及可选的状态码。Express 的默认内容类型是 text/html。如果你想改为 text/plain，需要在 res.send 之前调用 res.set('Content-Type','text/plain')。如果 body 是一个对象或一个数组，响应将会以 JSON 发送（内容类型需要被正确设置），不过既然想发送 JSON，推荐调用 res.json。
 
-- res.json(json),res.json(status,json)：向客户端发送 JSON 以及可选的状态码
+- res.json(json),res.json(status,json)：向客户端发送 JSON 以及可选的状态码（通常用于ajax请求返回消息）。
 
-- res.jsonp(json),req.jsonp(status,json)：向客户端发送 JSONP 及可选的状态码。
+- res.jsonp(json),req.jsonp(status,json)：向客户端发送 JSONP 及可选的状态码。（用于跨域请求）
 
-- res.render(view,[locals],callback) 使用配置的模板引擎渲染视图（后面详细讲）
+- res.render(view,[locals],callback)： 使用配置的模板引擎渲染视图（后面详细讲）。
+
+- res.redirect([status],url)重定向浏览器。默认重定向代码是 302（临时重定向）。通常，应尽量减少重定向，除非永久移动一个页面，这种情况应当使用代码 301（永久移动）。常用方法：表单提交后的重定向使用代码303：
+
+    ```
+    app.post('/staff2', (req, res, next) => {
+        for(let i in req.body.staff){
+            staff2.push(req.body.staff[i]);
+        }
+        //res.json(staff2);
+        res.redirect(303,'/staff2list');
+    });
+    ```
 
 - res.type(type)：一个简便的方法，用于设置 Content-Type 头信息。基本上相当于 res.set('ContentType','type')，只是如果你提供了一个没有斜杠的字符串，它会试图把其当作文件的扩展名映射为一个互联网媒体类型。比如，res.type('txt') 会将 Content-Type 设为text/plain。此功能在有些领域可能会有用（例如自动提供不同的多媒体文件），但是通常应该避免使用它，以便明确设置正确的互联网媒体类型。
+
+    ```
+    app.use((req,res,next)=>{
+        res.type('text/plain');
+        res.send('404','<h3>404 - Not Found，未设置此页面的路由。</h3>');
+        //此时不再识别html标签。
+    });
+    ```
