@@ -1,10 +1,16 @@
-h1{
+h1 {
   text-align: center;
 }
-p{
-  font-size:20px;
+
+p {
+  font-size: 20px;
 }
-span{
-  font-size:25px;
+
+span {
+  font-size: 25px;
   color: red;
+}
+
+ul {
+  font-size: 24px;
 }

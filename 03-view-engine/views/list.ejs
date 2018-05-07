@@ -1,0 +1,34 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>add</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="../assets/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <%- include("./header.ejs",{title:'标题'}) %>
+    <h3>用户列表：</h3>
+    <ul>
+      <%for (var i=0;i<staff.length,staff[i].age>19;i++){%>
+        <li><span>姓名</span><%=staff[i].name%>，<span>年龄：</span><%=: staff[i].age | plus:5%>，<span>爱好：<%=staff[i].like.toString().replace(',','，')%></span></li>
+      <%}%>
+    </ul>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <td>姓名</td>
+        <td>年龄</td>
+        <td>爱好</td>
+      </tr>
+      <%for (var i=0;i<staff.length;i++){%>
+        <tr><td><%=staff[i].name%></td><td><%=staff[i].age>19?'青年':'少年'%></td><td><%=staff[i].like.toString().replace(',','，')%></td></tr>
+      <%}%>
+    </table>
+    <%- include("./footer.ejs") %>
+  </div>
+</body>
+
+</html>

@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/02-req-res\\request.js"
+      "program": "${workspaceFolder}/03-view-engine\\index.js"
     }
   ]
 }
