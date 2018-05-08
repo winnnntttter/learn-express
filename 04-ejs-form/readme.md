@@ -1,12 +1,24 @@
-### 使用ejs模板，创建form表单添加页和添加后的列表页。
+## 一、表单提交
 
-#### 表单提交的方法：
+#### 1.1 表单提交的方法：
 
 - 大体上讲，向服务器发送客户端数据有两种方式：查询字符串和请求正文。通常，如果是使用查询字符串，就发起了一个 GET 请求；如果是使用请求正文，就发起了一个 POST 请求
 
 - 建议使用post提交表单，如果使用get请求，用户会在查询字符串中看到所有的输入数据（包括隐藏域）。
 
-#### 表单处理：
+- 使用PUT和DELETE的步骤：
+
+  1. 引用methodOverride中间件
+    ```
+    const methodOverride = require('method-override');
+    app.use(methodOverride('_method'));
+    ```
+  2. 定义app.put或app.delete这类路由
+
+  2. 在提交的地址后加?_method=put或?_method=delete，method使用POST
+  
+
+#### 1.2 表单处理：
 
 - get提交的表单，表单域在req.query对象中。
 

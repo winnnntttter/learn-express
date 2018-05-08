@@ -17,8 +17,7 @@ app.set('view engine', 'ejs');
 //设置是否启用视图编译缓存，启用将加快服务器执行效率
 app.set("view cache",false);
 
-//识别css样式,不引入将不知道外部样式表
-app.use('/public',express.static('public'));
+app.use('/public',express.static(path.join(__dirname, 'public')));
 
 //日志中间件
 app.use(logger('dev'));
@@ -27,8 +26,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//挂载静态资源处理中间件
-app.use(express.static(path.join(__dirname, 'public')));
 
 //form表单添加页
 app.get('/add', (req, res) => {
@@ -46,9 +43,9 @@ app.get('/list', (req, res) => {
   res.render('list',{accounts});
 });
 
-app.post('/add', (req, res,next) => {
+app.post('/add', (req, res, next) => {
   let newAccount = req.body;
-  newAccount.id = store.accounts.length + 1;
+  newAccount.id = Math.random()*100000000;
   store.accounts.push(newAccount);
   console.log(store);
   if (req.xhr || req.accepts('json,html')==='json') {//ajax提交的处理方法
@@ -57,6 +54,15 @@ app.post('/add', (req, res,next) => {
     //res.status(201).json(store);//此时提交成功显示store
     res.redirect(303,'/list');//重定向到list页
   }
+});
+
+app.put('/edit/:id', (req, res) =>{
+  let tempId = req.params.id;
+  store.accounts.forEach(element => {
+    if (condition) {
+      
+    }
+  });
 });
 
 //定制404页面
