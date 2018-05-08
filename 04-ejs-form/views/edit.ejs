@@ -5,7 +5,8 @@
 <body>
   <div class="container">
     <%- include("./header.ejs") %>
-    <form method="post" action="/user/<%= account.id %>?_method=put">
+    <form method="post" action="/user?_method=put">
+      <input type="hidden" name="id" value="<%= account.id %>">
       <div class="form-group">
         <label for="exampleInputEmail1">name</label>
         <input type="text" class="form-control" name="name" placeholder="name" value="<%= account.name %>">

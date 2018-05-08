@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "connect-flash": "^0.1.1",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "morgan": "^1.9.0",
-    "method-override": "^2.3.10"
+    "express-session": "^1.15.6",
+    "method-override": "^2.3.10",
+    "morgan": "^1.9.0"
   }
 }

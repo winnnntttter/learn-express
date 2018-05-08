@@ -7,6 +7,12 @@
 <body>
   <div class="container">
     <%- include("./header.ejs") %>
+    <% if(flash_success_message != ''){ %>
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>恭喜!</strong><%= flash_success_message %>
+    </div>
+    <% } %>
     <h3>用户列表：</h3>
     <table class="table table-bordered table-striped">
       <tr>
@@ -22,23 +28,31 @@
           <td><%=accounts[i].like%></td>
           <td>
             <a class="put" href="/user/<%=accounts[i].id%>">修改</a>
-            <a class="delete" data-id="/user/<%=accounts[i].id%>?_method=delete">删除</a>
+            <a class="delete" data-id="<%=accounts[i].id%>">删除</a>
+            <a class="delete2" data-id="<%=accounts[i].id%>">删除</a>
           </td>
         </tr>
       <%}%>
     </table>
+    <form class="hidden" id="deletForm" action="/user?_method=delete" method="POST">
+      <input type="hidden" name="id" id="userId">
+    </form>
     <a href="/user">添加</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/add-ajax">ajax添加</a>
     <%- include("./footer.ejs") %>
   </div>
+  
   <script>
     $(".delete").on("click",function(){
       var $this = $(this);
       $.ajax({
-        url: $this.attr("data-id"),
+        url: '/user?_method=delete',
         type: 'POST',
+        data: {id:$this.attr("data-id")},
         success: function(data){
           if(data.result){
-            window.location.href="/list";
+            //window.location.href="/list";
+            alert("删除成功！通过ajax")
+            $this.parents("tr").remove();
           } else {
             alert("Error");
           }
@@ -48,6 +62,10 @@
         }
       });
     });
+    $(".delete2").on("click",function(){
+      $("#userId").val($(this).attr("data-id"));
+      $("#deletForm").submit();
+    })
   </script>
 </body>
 

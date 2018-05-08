@@ -4,15 +4,30 @@ const fs = require('fs');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const session = require('express-session');
+const flash = require('connect-flash');
 const app = express();
 
 
-// seed store data by reading from disk
 const storeData = fs.readFileSync(path.join(__dirname, 'public/data/data.json'), "utf8")
-  .replace(/\r?\n|\r/g,'\n'); // normalize line endings
-//临时存储
+  .replace(/\r?\n|\r/g,'\n');
+
 let store = {};
 store.accounts = JSON.parse(storeData);
+
+app.use(session({
+  secret: "12345"
+}));
+
+//使用flash消息
+app.use(flash());
+
+app.use((req, res, next)=>{
+  res.locals.flash_success_message = req.flash('flash_success_message'); 
+  res.locals.flash_error_message = req.flash('flash_error_message');        
+  next();
+});
+
 
 //设置模板视图的目录
 app.set('views', path.join(__dirname, 'views'));
@@ -78,9 +93,9 @@ app.get('/user/:id', (req, res)=>{
   res.render('edit',{account});
 });
 
-app.put('/user/:id', (req, res) =>{
+app.put('/user', (req, res) =>{
   store.accounts.forEach((element,index) => {
-    if (element.id == req.params.id) {
+    if (element.id == req.body.id) {
       element.name = req.body.name;
       element.like = req.body.like;
     }
@@ -89,14 +104,29 @@ app.put('/user/:id', (req, res) =>{
   res.redirect(303,'/list');
 });
 
-app.delete('/user/:id', (req, res) =>{
+app.delete('/user', (req, res) =>{
+  let flag = false;
   store.accounts.forEach((element,index) => {
-    if (element.id == req.params.id) {
+    if (element.id == req.body.id) {
       store.accounts.splice(index,1);
+      flag = true;
     }
   });
   fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
-  res.json({'result':true,'message':'success!'});
+  if (req.xhr || req.accepts('json,html')==='json') {
+    if(flag === true){
+      res.json({'result':true,'message':'success!'});
+    }else{
+      res.json({'result':false,'message':'fail!'});
+    }
+  }else{
+    if(flag === true){
+      req.flash('flash_success_message', '删除成功！');
+    }else{
+      req.flash('flash_error_message', '删除失败！');
+    }
+    res.redirect(303,'/list');//重定向到list页
+  }
 });
 
 //定制404页面
