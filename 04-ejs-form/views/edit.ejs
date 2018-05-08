@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<% var title = 'edit' %>
+<% include head %>
+<body>
+  <div class="container">
+    <%- include("./header.ejs") %>
+    <form method="post" action="/user/<%= account.id %>?_method=put">
+      <div class="form-group">
+        <label for="exampleInputEmail1">name</label>
+        <input type="text" class="form-control" name="name" placeholder="name" value="<%= account.name %>">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">like</label>
+        <input type="text" class="form-control" name="like" placeholder="like" value="<%= account.like %>">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    <%- include("./footer.ejs") %>
+  </div>
+</body>
+
+</html>

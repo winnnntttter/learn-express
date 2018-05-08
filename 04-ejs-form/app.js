@@ -1,12 +1,18 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const app = express();
 
+
+// seed store data by reading from disk
+const storeData = fs.readFileSync(path.join(__dirname, 'public/data/data.json'), "utf8")
+  .replace(/\r?\n|\r/g,'\n'); // normalize line endings
 //临时存储
 let store = {};
-store.accounts = [];
+store.accounts = JSON.parse(storeData);
 
 //设置模板视图的目录
 app.set('views', path.join(__dirname, 'views'));
@@ -26,9 +32,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//支持put和delete
+app.use(methodOverride('_method'));
 
 //form表单添加页
-app.get('/add', (req, res) => {
+app.get('/user', (req, res) => {
   res.render('add');
 });
 
@@ -43,11 +51,12 @@ app.get('/list', (req, res) => {
   res.render('list',{accounts});
 });
 
-app.post('/add', (req, res, next) => {
+app.post('/user', (req, res, next) => {
   let newAccount = req.body;
-  newAccount.id = Math.random()*100000000;
+  newAccount.id = parseInt(Math.random()*1000000000).toString();
   store.accounts.push(newAccount);
   console.log(store);
+  fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
   if (req.xhr || req.accepts('json,html')==='json') {//ajax提交的处理方法
     res.json({'result':true,'message':'success!'});
   }else{
@@ -56,13 +65,38 @@ app.post('/add', (req, res, next) => {
   }
 });
 
-app.put('/edit/:id', (req, res) =>{
+app.get('/user/:id', (req, res)=>{
   let tempId = req.params.id;
-  store.accounts.forEach(element => {
-    if (condition) {
-      
+  let account, flag = false;
+  store.accounts.forEach((element,index) => {
+    if (element.id == req.params.id) {
+      account = element;
+      flag = true;
     }
   });
+  if (flag === false) throw new Error('Not Found');
+  res.render('edit',{account});
+});
+
+app.put('/user/:id', (req, res) =>{
+  store.accounts.forEach((element,index) => {
+    if (element.id == req.params.id) {
+      element.name = req.body.name;
+      element.like = req.body.like;
+    }
+  });
+  fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
+  res.redirect(303,'/list');
+});
+
+app.delete('/user/:id', (req, res) =>{
+  store.accounts.forEach((element,index) => {
+    if (element.id == req.params.id) {
+      store.accounts.splice(index,1);
+    }
+  });
+  fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
+  res.json({'result':true,'message':'success!'});
 });
 
 //定制404页面

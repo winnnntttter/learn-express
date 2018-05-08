@@ -10,10 +10,10 @@
     <h3>用户列表：</h3>
     <table class="table table-bordered table-striped">
       <tr>
-        <td>序号</td>
-        <td>姓名</td>
-        <td>爱好</td>
-        <td>操作</td>
+        <th>Id</th>
+        <th>姓名</th>
+        <th>爱好</th>
+        <th>操作</th>
       </tr>
       <%for (var i=0;i<accounts.length;i++){%>
         <tr>
@@ -21,15 +21,34 @@
           <td><%=accounts[i].name%></td>
           <td><%=accounts[i].like%></td>
           <td>
-            <a class="put">修改</a>
-            <a class="delete">删除</a>
+            <a class="put" href="/user/<%=accounts[i].id%>">修改</a>
+            <a class="delete" data-id="/user/<%=accounts[i].id%>?_method=delete">删除</a>
           </td>
         </tr>
       <%}%>
     </table>
-    <a href="/add">添加</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/add-ajax">ajax添加</a>
+    <a href="/user">添加</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/add-ajax">ajax添加</a>
     <%- include("./footer.ejs") %>
   </div>
+  <script>
+    $(".delete").on("click",function(){
+      var $this = $(this);
+      $.ajax({
+        url: $this.attr("data-id"),
+        type: 'POST',
+        success: function(data){
+          if(data.result){
+            window.location.href="/list";
+          } else {
+            alert("Error");
+          }
+        },
+        error: function(){
+          alert("Other Error");
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
