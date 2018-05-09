@@ -4,11 +4,17 @@
   // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+/* {
+  "type": "node",
+  "request": "launch",
+  "name": "Launch Program",
+  "program": "${workspaceFolder}/05-file-upload\\app.js"
+}, */
     {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/03-view-engine\\index.js"
+      "program": "${workspaceFolder}/06-middleware\\simple-example.js"
     }
   ]
 }

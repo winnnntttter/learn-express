@@ -8,38 +8,34 @@
 
 - 使用PUT和DELETE的步骤：
 
-  1. 引用methodOverride中间件
-    ```
+  ```
+  //1. 引用methodOverride中间件
     const methodOverride = require('method-override');
     app.use(methodOverride('_method'));
-    ```
-  2. 定义app.put和app.delete这类路由
+  //2. 定义app.put和app.delete这类路由
 
-  3. 在提交的地址后加?_method=put或?_method=delete，method使用POST
-    ```
+  //3. 在提交的地址后加?_method=put或?_method=delete，method使用POST
     <form method="post" action="/user?_method=put">
-    ```
-  4. 使用jquery的ajax提交可以有两种方式：
-    ```
-    $.ajax({
-        url: '/user?_method=delete',
-        type: 'POST',
-        data: {id:"123"},
+  //4. 使用jquery的ajax提交可以有两种方式：
+  $.ajax({
+      url: '/user?_method=delete',
+      type: 'POST',
+      data: {id:"123"},
 
-    //或者
-    $.ajax({
-        url: '/user',
-        type: 'DELETE',
-        data: {id:"123"},
+  //或者
+  $.ajax({
+      url: '/user',
+      type: 'DELETE',
+      data: {id:"123"},
 
-    //express判断为ajax请求的方法：
-    if (req.xhr || req.accepts('json,html')==='json') {//ajax提交的处理方法
-      res.json({'result':true,'message':'success!'});
-    }else{                                             //非ajax
-      res.redirect(303,'/list');//重定向到list页
-    }
-    //如果是AJAX请求，req.xhr值为 true。req.accepts 试图确定返回的最合适的响应类型。req.accepts('json,html') 询问最佳返回格式是JSON 还是 HTML，根据这两个属性返回合适的数据
-    ```
+  //express判断为ajax请求的方法：
+  if (req.xhr || req.accepts('json,html')==='json') {//ajax提交的处理方法
+    res.json({'result':true,'message':'success!'});
+  }else{                                             //非ajax
+    res.redirect(303,'/list');//重定向到list页
+  }
+  //如果是AJAX请求，req.xhr值为 true。req.accepts 试图确定返回的最合适的响应类型。req.accepts('json,html') 询问最佳返回格式是JSON 还是 HTML，根据这两个属性返回合适的数据
+  ```
   
 
 #### 1.2 表单请求对象：

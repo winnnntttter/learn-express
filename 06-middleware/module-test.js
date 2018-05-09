@@ -16,7 +16,7 @@ app.use(middleware3);
 
 app.get('/a', (req, res) => {
   console.log(req.test);
-  res.send("get it");
+  res.send(req.test);
 });
 
 app.listen(3000,  ()=> {
