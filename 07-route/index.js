@@ -2,15 +2,16 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var path = require('path');
-var app = express();
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var methodOverride = require('method-override');
-var site = require('./routes/site');
-var post = require('./routes/post');
-var user = require('./routes/user');
+const express = require('express');
+const path = require('path');
+const app = express();
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
+const site = require('./routes/site');
+const post = require('./routes/post');
+const user = require('./routes/user');
+const test = require('./routes/test');
 
 module.exports = app;
 
@@ -26,7 +27,7 @@ if (!module.parent) {
 
 app.use(methodOverride('_method'));
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // General
@@ -46,7 +47,24 @@ app.put('/user/:id/edit', user.update);
 
 app.get('/posts', post.list);
 
-/* istanbul ignore next */
+//test
+app.get('/about', test.about);
+app.get('/ab?cd', test.abcd);
+app.get(/.*fly$/, test.fly);
+app.get('/example/d', [test.cb0,test.cb1], (req, res)=> {
+  res.send('Hello from D!');
+});
+app.route('/book')
+  .get(test.getBook)
+  .post(test.postBook)
+  .put(test.putBook);
+
+  //curl -X POST "http://localhost:3000/book"
+  //curl -X PUT "http://localhost:3000/book"
+
+app.get('/special',test.getSpecials,test.renderSpecials);
+
+
 if (!module.parent) {
   app.listen(3000);
   console.log('Express started on port 3000');

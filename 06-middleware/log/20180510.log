@@ -1,0 +1,2 @@
+::1 - - [10/May/2018:01:56:59 +0000] "GET /users HTTP/1.1" 200 16 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36"
+::1 - - [10/May/2018:02:04:34 +0000] "GET /users HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36"

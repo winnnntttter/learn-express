@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= specials.title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<h1>specials</h1>
+
+<dl id="specials">
+  <% specials.items.forEach(function(special) { %>
+    <dt><%= special.item %></dt>
+    <dd><%= special.discount %></dd>
+  <% }) %>
+</dl>
+
+<% include ../footer %>

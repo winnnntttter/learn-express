@@ -15,13 +15,11 @@ exports.load = function(req, res, next){
   if (req.user) {
     next();
   } else {
-    res.render('users/deny');
-    /* var err = new Error('cannot find user ' + id);
+    var err = new Error('cannot find user ' + id);
     err.status = 404;
-    next(err); */
+    next(err);
   }
 };
-
 
 exports.view = function(req, res){
   res.render('users/view', {
