@@ -121,63 +121,86 @@
   app.use(mid.middleware2);
   ```
 
-  ## 二、常用中间件
+## 二、常用中间件
 
-  #### 2.1 static
-  唯一内置的中间件，负责在 Express 应用中提托管静态资源。
-  使用：express.static(root, [options])。参数 root 指提供静态资源的根目录 options 为可选参数。
-  ```
-  app.use(express.static('public'));
-  现在，public 目录下面的文件就可以访问了。
-  http://localhost:3000/images/kitten.jpg
-  http://localhost:3000/css/style.css
+#### 2.1 static
+唯一内置的中间件，负责在 Express 应用中提托管静态资源。
+使用：express.static(root, [options])。参数 root 指提供静态资源的根目录 options 为可选参数。
+```
+app.use(express.static('public'));
+现在，public 目录下面的文件就可以访问了。
+http://localhost:3000/images/kitten.jpg
+http://localhost:3000/css/style.css
 
-  静态资源存放在多个目录下面，可以多次调用 express.static 中间件
-  如果希望所有通过 express.static 访问的文件都存放在一个“虚拟（virtual）”目录（即目录根本不存在）下面，可以通过为静态资源目录指定一个挂载路径的方式来实现
-  app.use('/static', express.static('public'));
-  现在，可以通过带有 “/static” 前缀的地址来访问 public 目录下面的文件了
-  http://localhost:3000/static/images/kitten.jpg
-  ```
+静态资源存放在多个目录下面，可以多次调用 express.static 中间件
+如果希望所有通过 express.static 访问的文件都存放在一个“虚拟（virtual）”目录（即目录根本不存在）下面，可以通过为静态资源目录指定一个挂载路径的方式来实现
+app.use('/static', express.static('public'));
+现在，可以通过带有 “/static” 前缀的地址来访问 public 目录下面的文件了
+http://localhost:3000/static/images/kitten.jpg
+```
 
-  #### 2.2 body-parser
-  用于处理POST表单的请求体，主要用于处理application/json和application/x-www-form-urlencoded类型
-  ```
-  const bodyParser = require('body-parser');
-  
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true}));
-  ```
+#### 2.2 body-parser
+用于处理POST表单的请求体，主要用于处理application/json和application/x-www-form-urlencoded类型
+```
+const bodyParser = require('body-parser');
 
-  #### 2.3 method-override
-  允许浏览器“假装”使用除 GET 和 POST之外的 HTTP 方法
-  ```
-  const methodOverride = require('method-override');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
+```
 
-  app.use(methodOverride('_method'));
+#### 2.3 method-override
+允许浏览器“假装”使用除 GET 和 POST之外的 HTTP 方法
+```
+const methodOverride = require('method-override');
 
-  在提交的地址后加?_method=put或?_method=delete，method使用POST
-  ```
+app.use(methodOverride('_method'));
 
-  #### 2.4 morgan
-  日志中间件
-  ```
-  const logger = require('morgan');
-  app.use(logger('dev'));//请求信息打印在控制台，便于开发调试
+在提交的地址后加?_method=put或?_method=delete，method使用POST
+```
 
-  //将日志记录在日志文件里
-  const accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
-  app.use(logger('combined', {stream: accessLogStream}));
+#### 2.4 morgan
+日志中间件
+```
+const logger = require('morgan');
+app.use(logger('dev'));//请求信息打印在控制台，便于开发调试
 
-  将所有的请求记录在 log/ 目录下按每日日期生成的文件中，需要使用 file-stream-rotator 模块
-  const FileStreamRotator = require('file-stream-rotator');
-  //按日期分文件
-  const logDirectory = __dirname + '/log';
-  fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-  var accessLogStream = FileStreamRotator.getStream({
-      date_format: 'YYYYMMDD',
-      filename: logDirectory + '/%DATE%.log',
-      frequency: 'daily',
-      verbose: false
+//将日志记录在日志文件里
+const accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
+app.use(logger('combined', {stream: accessLogStream}));
+
+将所有的请求记录在 log/ 目录下按每日日期生成的文件中，需要使用 file-stream-rotator 模块
+const FileStreamRotator = require('file-stream-rotator');
+//按日期分文件
+const logDirectory = __dirname + '/log';
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+var accessLogStream = FileStreamRotator.getStream({
+    date_format: 'YYYYMMDD',
+    filename: logDirectory + '/%DATE%.log',
+    frequency: 'daily',
+    verbose: false
+});
+app.use(logger('combined', {stream: accessLogStream}));
+```
+
+#### 2.5 formidable
+处理包含文件的表单的中间件
+```
+const formidable = require('formidable');
+
+app.post('/add', (req, res,next) => {
+  let form = new formidable.IncomingForm();
+  form.parse(req,(err,fields,files)=>{
+    //console.log(fields);//非文件对象集合
+    //console.log(files);//文件对象集合
   });
-  app.use(logger('combined', {stream: accessLogStream}));
-  ```
+});
+```
+
+#### 2.6 其他中间件
+
+  - connect-flash：提供flash消息支持
+  - cookie-parser：提供对 cookie 的支持
+  - express-session：提供会话支持
+  - csurf：防范跨域请求伪造（CSRF）攻击
+  - errorhandler：为客户端提供栈追踪和错误消息
+  - 更多中间件可以在npm上搜索“Express”、“Connect”和“Middleware”
