@@ -41,7 +41,7 @@ const staff=[
   }
 ];
 
-app.set('view options', {delimiter: '?'});
+//app.set('view options', {delimiter: '?'});
 //交互
 app.get('/',(req, res)=>{
   res.render('index',data); //对象可直接引用其属性
