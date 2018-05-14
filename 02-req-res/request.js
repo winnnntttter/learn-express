@@ -4,8 +4,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-//app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));//不添加则表单提交的数据无效 extended 为false时不能正确的解析复杂对象（多级嵌套）
+app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true}));//不添加则表单提交的数据无效 extended 为false时不能正确的解析复杂对象（多级嵌套）
 
 const staff = {
   beijing:{
@@ -34,12 +34,11 @@ app.get('/staff/:city',(req,res)=>{
   if(!staff[req.params.city]){
     console.log("ooh, city not found");
     res.send(`ooh, city ${req.params.city} not found`);
-    //return next();
   }else{
     if(req.query.name){
       if(staff[req.params.city][req.query.name]){
         let like = staff[req.params.city][req.query.name].like;
-        res.send(`${req.query.name} form ${req.params.city} like ${like}`);
+        res.send(`${req.query.name} like ${like}`);
       }else{
         res.send(`There is no man named ${req.query.name}`);
       }
@@ -75,6 +74,7 @@ app.get('/staff/:city/:name',(req,res,next)=>{
 });
 
 app.post('/staff', (req, res,next) => {         //需要添加app.use(bodyParser.json());使用curl提交
+  console.log(req.body);
   for(let i in req.body){
     if(staff[i]){
       Object.assign(staff[i],req.body[i]);
@@ -82,14 +82,33 @@ app.post('/staff', (req, res,next) => {         //需要添加app.use(bodyParser
       staff[i] = req.body[i];
     }
   }
-  console.log(staff);
   res.json(staff);
 });
 
 
 app.get('/staff3',(req, res, next)=>{
   res.type('text/html');
-  res.send('<form action="/staff3" method="post"><input name="beijing"><button type="submit">提交</button></form>');
+  res.send(`<form action="/staff3" method="post"><input name="beijing"><button type="submit">提交</button></form>
+  <button type="button" id="ajaxsub">ajax 提交</button>
+  <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+    $("#ajaxsub").on("click",function(){
+      $.ajax({
+        url: "/staff",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "paris":{
+            "jojo":{"like":"fighting"}
+          }
+        }),
+        success:function(data){
+          console.log(data);
+        }
+      });
+    })
+  </script>
+  `);
 });
 
 app.post('/staff3', (req, res, next) => {          //使用表单提交，不需要添加app.use(bodyParser.json());，需添加app.use(bodyParser.urlencoded({ extended: false}))
@@ -110,7 +129,14 @@ app.post('/staff3', (req, res, next) => {          //使用表单提交，不需
 
 app.get('/staff2',(req, res, next)=>{
   res.type('text/html');
-  res.send('<form action="/staff2" method="post">城市：<input name="staff[0][city]">姓名：<input name="staff[0][name]">爱好：<label>读<input type="checkbox" name="staff[0][like]" value="reading"></label><label>写<input type="checkbox" name="staff[0][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[0][like]" value="eating"></label><br>城市：<input name="staff[1][city]">姓名：<input name="staff[1][name]">爱好：<label>读<input type="checkbox" name="staff[1][like]" value="reading"></label><label>写<input type="checkbox" name="staff[1][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[1][like]" value="eating"></label><br><button type="submit">提交</button></form>');
+  res.send(`<form action="/staff2" method="post">
+  城市：<input name="staff[0][city]">
+  姓名：<input name="staff[0][name]">
+  爱好：<label>读<input type="checkbox" name="staff[0][like]" value="reading"></label><label>写<input type="checkbox" name="staff[0][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[0][like]" value="eating"></label><br>
+  城市：<input name="staff[1][city]">
+  姓名：<input name="staff[1][name]">
+  爱好：<label>读<input type="checkbox" name="staff[1][like]" value="reading"></label><label>写<input type="checkbox" name="staff[1][like]" value="writing"></label><label>吃<input type="checkbox" name="staff[1][like]" value="eating"></label><br>
+  <button type="submit">提交</button></form>`);
 });//extended需设置为true
 
 app.post('/staff2', (req, res, next) => {
@@ -126,6 +152,14 @@ app.use((req,res,next)=>{
   res.type('text/plain');
   res.status(404);
   res.send('404 - Not Found');
+});
+
+//定制500页面 程序运行错误
+app.use((err,req,res,next)=>{
+  console.error(err);
+  res.type('text/plain');
+  res.status(500);
+  res.send('500 - Server Error');
 });
 
 app.listen(3000);

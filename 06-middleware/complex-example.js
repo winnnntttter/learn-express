@@ -54,7 +54,7 @@ app.use('/b',  (err, req, res, next)=> {
   console.log('/b 检测到错误并传递 ');
   next(err);
 });
-app.get('/c',  (err, req)=> {
+app.get('/c',  (req, res)=> {
   console.log('/c: 抛出错误 ');
   throw new Error('c 失败 ');
 });

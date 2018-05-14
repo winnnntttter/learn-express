@@ -14,7 +14,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/06-middleware\\simple-example.js"
+      "program": "${workspaceFolder}/02-req-res\\request.js"
     }
   ]
 }

@@ -6,7 +6,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"beijing":{"zhao":{"like":
 
 curl -H 'Content-Type: application/json' -X POST -d '{"beijing":{"zhao":{"like":"listening"},"zhang":{"like":"playing"}}}' "http://localhost:3000/staff" -i 
 
-curl -H 'Content-Type: application/json' -X POST -d '{"guangzhou":{"liu":{"like":"sleeping"},"han":{"like":"dreaming"}}}' "http://localhost:3000/staff" -i 
+curl -H 'Content-Type: application/json' -X POST -d '{"beijing":{"zhao":{"like":"listening"}},"guangzhou":{"liu":{"like":"sleeping"}}}' "http://localhost:3000/staff" -i 
 sleep 1
 
 # 测试表单提交

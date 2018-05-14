@@ -14,7 +14,7 @@
     <h3>用户列表：</h3>
     <ul>
       <%for (var i=0;i<staff.length,staff[i].age>19;i++){%>
-        <li><span>姓名</span><%=staff[i].name%>，<span>年龄：</span><%=: staff[i].age | plus:5%>，<span>爱好：<%=staff[i].like.toString().replace(',','，')%></span></li>
+        <li><span>姓名</span><%=staff[i].name%>，<span>年龄：</span><%=staff[i].age%>，<span>爱好：<%=staff[i].like.toString().replace(',','，')%></span></li>
       <%}%>
     </ul>
     <table class="table table-bordered table-striped">
