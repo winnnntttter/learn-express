@@ -23,7 +23,7 @@ app.use('/assets',express.static(path.join(__dirname, 'assets')));
 
 
 const data={
-  name : 'Bruce',
+  name : '<i>Bruce</i>',
   sex : '男',
   content : '参数，可以更改'
 };
@@ -44,11 +44,11 @@ const staff=[
 //app.set('view options', {delimiter: '?'});
 //交互
 app.get('/',(req, res)=>{
-  res.render('index',data); //对象可直接引用其属性
+  res.render('index',data); //只传一个对象格式的json数据可以不加{}
 });
 
 app.get('/list',(req, res)=>{
-  res.render('list',{staff}); //数组加{}
+  res.render('list',{staff,data}); //传多个数据或一个数组格式的接送数据要加{}
 });
 
 

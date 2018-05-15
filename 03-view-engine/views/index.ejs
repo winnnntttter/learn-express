@@ -10,7 +10,7 @@
 <body>
   <h1>EJS模板引擎</h1>
   <p>这是很简单的一个小流程就不在一一的标注流程了,注释的很清楚了</p>
-  <p>这里是姓名: <span><%= name %></span></p><!--这里显示js文件传过来的name值:Bruce-->
+  <p>这里是姓名: <span><%- name %></span></p><!--这里显示js文件传过来的name值:Bruce-->
   <p>这里是性别: <span><%= sex %></span></p><!--这里显示js文件传过来的sex值:'男'-->
   <p>这里是其他: <span><%= content %></span></p><!--这里显示js文件传过来的content值,可以是json,接受服务器所传的东西,方便前段展示-->
 </body>

@@ -24,9 +24,14 @@
         <td>爱好</td>
       </tr>
       <%for (var i=0;i<staff.length;i++){%>
-        <tr><td><%=staff[i].name%></td><td><%=staff[i].age>19?'青年':'少年'%></td><td><%=staff[i].like.toString().replace(',','，')%></td></tr>
+        <tr>
+          <td><%=staff[i].name%></td>
+          <td><%=staff[i].age>19?'青年':'少年'%></td>
+          <td><%=staff[i].like.toString().replace(',','，')%></td>
+        </tr>
       <%}%>
     </table>
+    <span><%- data.name %></span>
     <%- include("./footer.ejs") %>
   </div>
 </body>
