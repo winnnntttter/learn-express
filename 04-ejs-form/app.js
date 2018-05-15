@@ -52,7 +52,12 @@ app.use(methodOverride('_method'));
 
 //form表单添加页
 app.get('/user', (req, res) => {
-  res.render('add');
+  let bindError = {};
+  let user = {
+    name: '',
+    like: ''
+  };
+  res.render('add',{bindError,user});
 });
 
 //ajax添加页
@@ -69,14 +74,28 @@ app.get('/list', (req, res) => {
 app.post('/user', (req, res, next) => {
   let newAccount = req.body;
   newAccount.id = parseInt(Math.random()*1000000000).toString();
-  store.accounts.push(newAccount);
-  console.log(store);
-  fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
+  let bindError = {};
+  let user = req.body;
   if (req.xhr || req.accepts('json,html')==='json') {//ajax提交的处理方法
-    res.json({'result':true,'message':'success!'});
+    if(req.body.name.indexOf('S')>=0){
+      res.json({'result':false,'message':'Sorry, You cant have a name include S.'});
+    }else{
+      store.accounts.push(newAccount);
+      console.log(store);
+      fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
+      res.json({'result':true,'message':'success!'});
+    }
   }else{
-    //res.status(201).json(store);//此时提交成功显示store
-    res.redirect(303,'/list');//重定向到list页
+    if(req.body.name.indexOf('S')>=0){
+      bindError.nameErr = 'Sorry, You cant have a name include S.';
+      res.render('add',{bindError,user});
+    }else{
+      store.accounts.push(newAccount);
+      console.log(store);
+      fs.writeFileSync(path.join(__dirname, 'public/data/data.json'),JSON.stringify(store.accounts,null,4));
+
+      res.redirect(303,'/list');//重定向到list页
+    }
   }
 });
 

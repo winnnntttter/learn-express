@@ -45,8 +45,8 @@
     $(".delete").on("click",function(){
       var $this = $(this);
       $.ajax({
-        url: '/user?_method=delete',
-        type: 'POST',
+        url: '/user',
+        type: 'DELETE',
         data: {id:$this.attr("data-id")},
         success: function(data){
           if(data.result){

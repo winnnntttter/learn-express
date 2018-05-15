@@ -8,11 +8,15 @@
     <form method="post" action="/user">
       <div class="form-group">
         <label for="exampleInputEmail1">name</label>
-        <input type="text" class="form-control" name="name" placeholder="name">
+        <input type="text" class="form-control" name="name" placeholder="name" value="<%= user.name %>">
+        <% if(bindError.nameErr){ %>
+          <small class="help-block"><%= bindError.nameErr %></small>
+        <% } %>
+        
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">like</label>
-        <input type="text" class="form-control" name="like" placeholder="like">
+        <input type="text" class="form-control" name="like" placeholder="like" value="<%= user.like %>">
       </div>
       <!-- <div class="form-group">
         <label for="exampleInputFile">File input</label>

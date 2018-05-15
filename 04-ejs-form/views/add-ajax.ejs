@@ -34,7 +34,7 @@
             if(data.result){
               $container.html('<h2>添加成功，请到<a href="/list">列表页</a>查看</h2>');
             } else {
-              $container.html('发生了一些意外');
+              alert(data.message);
             }
           },
           error: function(){
