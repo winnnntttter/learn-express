@@ -1,6 +1,6 @@
 
 const middleware1 = (req,res,next)=>{
-  req.test = {a:"asd"};
+  req.test = {a:"aaa"};
   console.log(req.test);
   next();
 };
@@ -17,4 +17,12 @@ const middleware3 = (req,res,next)=>{
   next();
 };
 
-module.exports = {middleware1,middleware2,middleware3};
+const checkUser = (req,res,next)=>{
+  if(req.query.api_key){
+    next();
+  }else{
+    res.status(401).send('Not authorized');
+  }
+};
+
+module.exports = {middleware1,middleware2,middleware3,checkUser};

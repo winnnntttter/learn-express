@@ -1,7 +1,7 @@
 ## 一、路由基础
 #### 1.1 基本概念
 路由是指如何定义应用的端点（URIs）以及如何响应客户端的请求。
-路由是由一个 URI、HTTP 请求（GET、POST等）和若干个句柄组成，它的结构如下： app.METHOD(path, [callback...], callback)， app 是 express 对象的一个实例， METHOD 是一个 HTTP 请求方法， path 是服务器上的路径， callback 是当路由匹配时要执行的函数。
+路由是由一个 URI、HTTP 请求（GET、POST等）和若干个处理器组成，它的结构如下： app.METHOD(path, [callback...], callback)， app 是 express 对象的一个实例， METHOD 是一个 HTTP 请求方法， path 是服务器上的路径， callback 是当路由匹配时要执行的函数。
   ```
   app.get('/', (req, res)=>{
     res.send('hello world');
@@ -58,9 +58,9 @@ app.get(/.*fly$/, function(req, res) {
 });
 ```
 
-#### 1.4 路由句柄
+#### 1.4 路由处理器
 可以为请求处理提供多个回调函数，其行为就是利用中间件处理请求。这些回调函数可以调用 next('route') 方法而略过其他路由回调函数。可以利用该机制为路由定义前提条件，如果在现有路径上继续执行没有意义，则可将控制权交给剩下的路径。（见上一章“重点注意”最后一条）
-路由句柄有多种形式，可以是一个函数、一个函数数组，或者是两者混合：
+路由处理器有多种形式，可以是一个函数、一个函数数组，或者是两者混合：
 
 ```
 const cb0 = (req, res, next)=> {
@@ -106,8 +106,8 @@ app.get('/sub-rosa', authorize, function(){
 
 ```
 #### 1.5 app.route()
-可使用 app.route() 创建路由路径的链式路由句柄。由于路径在一个地方指定，这样做有助于创建模块化的路由，而且减少了代码冗余和拼写错误
-下面这个示例程序使用 app.route() 定义了链式路由句柄。
+可使用 app.route() 创建路由路径的链式路由处理器。由于路径在一个地方指定，这样做有助于创建模块化的路由，而且减少了代码冗余和拼写错误
+下面这个示例程序使用 app.route() 定义了链式路由处理器。
   ```
   app.route('/book')
     .get(function(req, res) {
@@ -122,7 +122,7 @@ app.get('/sub-rosa', authorize, function(){
   ```
 ## 二、express.Router
 
-可使用 express.Router 类创建模块化、可挂载的路由句柄。Router 实例是一个完整的中间件和路由系统，因此常称其为一个 “mini-app”。app.use()、app.get()、app.all()、app.route()等方法都可以对应到Router实例上。
+可使用 express.Router 类创建模块化、可挂载的路由处理器。Router 实例是一个完整的中间件和路由系统，因此常称其为一个 “mini-app”。app.use()、app.get()、app.all()、app.route()等方法都可以对应到Router实例上。
 下面的实例程序创建了一个路由模块，并加载了一个中间件，定义了一些路由，并且将它们挂载至应用的路径上。
 在 app 目录下创建名为 birds.js 的文件，内容如下：
 ```

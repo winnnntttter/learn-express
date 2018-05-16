@@ -9,6 +9,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const route = require('./routes/route');
+const birds = require('./routes/birds');
 
 module.exports = app;
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/birds', birds);
 app.use(route);
 //app.use('/birds',route);此时所有路径前都要加一层/birds/
 

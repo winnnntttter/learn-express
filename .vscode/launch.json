@@ -14,7 +14,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/02-req-res\\request.js"
+      "program": "${workspaceFolder}/04-ejs-form\\app.js"
     }
   ]
 }

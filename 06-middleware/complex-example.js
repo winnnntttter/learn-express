@@ -80,7 +80,7 @@ app.get('/user/:id', (req, res, next)=> {
 });
 
 
-app.use( (err, req, res, next)=> {                    //处理所有的错误，c未传递错误，进入不到这一步，而是到下一步
+/* app.use( (err, req, res, next)=> {                    //处理所有的错误，c未传递错误，进入不到这一步，而是到下一步
   console.log(' 检测到未处理的错误 : ' + err.message);
   //console.error(err);
   res.send('500 - 服务器错误 ');
@@ -88,7 +88,21 @@ app.use( (err, req, res, next)=> {                    //处理所有的错误，
 app.use( (req, res)=> {                               
   console.log(' 未处理的路由 ');
   res.send('404 - 未找到 ');
+}); */
+
+//定制404页面
+app.use((req,res,next)=>{
+  res.status(404);
+  res.send('404 - Not Found');
 });
+
+//定制500页面 程序运行错误
+app.use((err,req,res,next)=>{
+  console.error(err.message);
+  res.status(500);
+  res.send('500 - Server Error');
+});
+
 app.listen(3000,  ()=> {
   console.log(' 监听端口 3000');
 });
