@@ -4,7 +4,7 @@
   "description": "### express版",
   "main": "express-hello-world.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node-dev express-hello-world.js"
   },
   "keywords": [],
   "author": "",
