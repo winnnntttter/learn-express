@@ -21,7 +21,10 @@ router.get('/posts', post.list);
 
 // Manager
 router.get('/signup',manager.signup);
-router.post('/manager',manager.addManager);
+router.post('/signup',manager.addManager);
+
+router.get('/signin',manager.signin);
+router.post('/signin',manager.authUser);
 
 // catch 404 and forward to error handler
 router.use(function(req, res, next) {

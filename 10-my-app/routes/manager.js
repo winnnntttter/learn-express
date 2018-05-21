@@ -10,8 +10,8 @@ const findDocuments = (client, callback) => {
   collection.find({}).toArray((error, docs) => {
     if (error) return process.exit(1);
 
-    console.log(`Found the following documents:`)
-    console.dir(docs);
+    console.log(`Found the following documents:`);
+    //console.dir(docs);
     callback(docs);
   });
 };
@@ -27,23 +27,19 @@ const insertDocuments = (client,data,callback) =>{
   });
 };
 
-MongoClient.connect(url,(err,client)=>{
-  if (err) return process.exit(1);
-  console.log('Connection is okey');
-  findDocuments(client,()=>{
-
-  });
-});
 
 exports.addManager = (req, res, next) => {
-  let bindError = {};
+  let bindError = '',
+    manager = req.body;
   if(req.body.password !== req.body.repassword){
-    bindError.passErr = '两次密码输入不一样';
-    res.render('manager/signup', { title: 'Add Manager Error' });
+    bindError = '两次密码输入不一样';
+    res.render('manager/signup', { title: 'Sign up error',bindError,manager });
   }else{
-    let newAccount = req.body;
+    let newAccount = {};
+    newAccount.name = req.body.name;
+    newAccount.password = req.body.password;
     newAccount.id = parseInt(Math.random()*1000000000).toString();
-    hash({ password: req.body.password }, function (err, pass, salt, hash) {
+    hash({ password: req.body.password }, (err, pass, salt, hash)=> {
       if (err) throw err;
 
       newAccount.salt = salt;
@@ -55,14 +51,95 @@ exports.addManager = (req, res, next) => {
       console.log('Connection is okey');
       insertDocuments(client,newAccount,(result)=>{
         console.log(result);
-        res.send(result);
+        res.redirect(303,'/');
       });
     });
-
-    //res.redirect(303,'/list');//重定向到list页
   }
 };
 
+const findUser = (name,pass,docs)=>{
+  return docs.find((item)=>{
+    return item.name === name && item.password === pass;
+  });
+};
+
+const authenticate = (name, pass, fn)=>{
+  MongoClient.connect(url,(err,client)=>{
+    if (err) return process.exit(1);
+    console.log('Connection is okey');
+    findDocuments(client,(docs)=>{
+      let user = findUser(name, pass,docs);
+      if (!user) return fn(new Error('cannot find user'));
+
+      hash({ password: pass, salt: user.salt },(err, pass, salt, hash)=> {
+        if (err) return fn(err);
+        if (hash === user.hash) return fn(null, user);
+        fn(new Error('invalid password'));
+      });
+    });
+  });
+};
+
+exports.authUser = (req, res, next) => {
+
+  authenticate(req.body.name, req.body.password, (err, user)=>{
+    if (user) {
+      // Regenerate session when signing in
+      // to prevent fixation
+      req.session.regenerate(()=>{
+        // Store the user's primary key
+        // in the session store to be retrieved,
+        // or in this case the entire user object
+        req.session.user = user;
+        req.session.success = 'Authenticated as ' + user.name
+          + ' click to <a href="/logout">logout</a>. '
+          + ' You may now access <a href="/">/restricted</a>.';
+        res.redirect('back');
+      });
+    } else {
+      req.session.error = 'Authentication failed, please check your '
+        + ' username and password.';
+      res.redirect('/signin');
+    }
+  });
+
+
+  /* let bindError = '';
+  if(req.body.password !== req.body.repassword){
+    bindError = '两次密码输入不一样';
+    res.render('manager/signup', { title: 'Sign up error',bindError,manager });
+  }else{
+    let newAccount = {};
+    newAccount.name = req.body.name;
+    newAccount.password = req.body.password;
+    newAccount.id = parseInt(Math.random()*1000000000).toString();
+    hash({ password: req.body.password }, (err, pass, salt, hash)=> {
+      if (err) throw err;
+
+      newAccount.salt = salt;
+      newAccount.hash = hash;
+    });
+
+    MongoClient.connect(url,(err,client)=>{
+      if (err) return process.exit(1);
+      console.log('Connection is okey');
+      insertDocuments(client,newAccount,(result)=>{
+        console.log(result);
+        res.redirect(303,'/');
+      });
+    });
+  } */
+};
+
 exports.signup = (req, res)=>{
-  res.render('manager/signup', { title: 'Add Manager' });
+  let bindError = '';
+  let manager = {
+    name: ''
+  };
+  res.render('manager/signup', { title: 'Sign up',bindError,manager});
+};
+
+exports.signin = (req, res)=>{
+  let bindError = '';
+  res.render('manager/signin', { title: 'Sign in',bindError});
 };
