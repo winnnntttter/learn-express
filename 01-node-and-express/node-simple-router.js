@@ -1,5 +1,5 @@
 const http = require('http');
-http.createServer(function(req,res){
+http.createServer((req,res)=>{
 const path = req.url.replace(/\/?(?:\?.*)?$/, '').toLowerCase();
   switch(path) {
     case '':
