@@ -1,6 +1,14 @@
 const fs = require("fs");
-fs.readFile(`${__dirname}/node-hello-world.js`, "utf8", (error, file)=> {  
+
+console.log(`异步读取开始：${new Date().getTime()}`);
+
+fs.readFile(`${__dirname}/package-lock.json`, "utf8", (error, file)=> {  
      if (error) throw error;  
-     console.log("我读完文件了！");
+     console.log(`异步读取结束：${new Date().getTime()}`);
 });
-console.log("我不会被阻塞！");
+
+console.log(`同步读取开始：${new Date().getTime()}`);
+
+const data = fs.readFileSync(`${__dirname}/package-lock.json`, "utf8");
+
+console.log(`同步读取结束：${new Date().getTime()}`);
